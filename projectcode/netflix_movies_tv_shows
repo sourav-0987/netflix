@@ -1,0 +1,87 @@
+# Netflix Movies & TV Shows Data Analysis
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load Dataset
+df = pd.read_csv("C:/project/netflix_titles.csv")
+# Basic Information
+print("Dataset Shape:", df.shape)
+print(df.info())
+
+# Missing Values
+print("\nMissing Values:")
+print(df.isnull().sum())
+
+# Fill Missing Values
+df['country'].fillna('Unknown', inplace=True)
+df['director'].fillna('Not Available', inplace=True)
+df['cast'].fillna('Not Available', inplace=True)
+
+# ----------------------------
+# Movies vs TV Shows
+# ----------------------------
+
+plt.figure(figsize=(6,4))
+sns.countplot(x='type', data=df)
+plt.title("Movies vs TV Shows")
+plt.savefig("images/content_type.png")
+plt.show()
+
+# ----------------------------
+# Top 10 Countries
+# ----------------------------
+
+plt.figure(figsize=(10,5))
+df['country'].value_counts().head(10).plot(kind='bar')
+plt.title("Top 10 Countries Producing Netflix Content")
+plt.savefig("images/top_countries.png")
+plt.show()
+
+# ----------------------------
+# Ratings Distribution
+# ----------------------------
+
+plt.figure(figsize=(10,5))
+sns.countplot(y='rating',
+              data=df,
+              order=df['rating'].value_counts().index)
+plt.title("Content Ratings Distribution")
+plt.savefig("images/ratings_distribution.png")
+plt.show()
+
+# ----------------------------
+# Release Year Trend
+# ----------------------------
+
+plt.figure(figsize=(12,6))
+df['release_year'].value_counts().sort_index().plot()
+plt.title("Netflix Content Release Trend")
+plt.xlabel("Year")
+plt.ylabel("Number of Titles")
+plt.savefig("images/release_year_trend.png")
+plt.show()
+
+# ----------------------------
+# Top Genres
+# ----------------------------
+
+genre = df['listed_in'].str.split(', ').explode()
+
+plt.figure(figsize=(12,6))
+genre.value_counts().head(10).plot(kind='bar')
+plt.title("Top 10 Genres on Netflix")
+plt.show()
+
+# ----------------------------
+# Key Insights
+# ----------------------------
+
+print("\nKey Insights")
+print("- Movies dominate Netflix content.")
+print("- United States produces the most content.")
+print("- TV-MA is the most common rating.")
+print("- Content growth increased rapidly after 2015.")
+print("- Drama and International Movies are highly popular.")
